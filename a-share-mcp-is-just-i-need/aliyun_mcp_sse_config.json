@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "a-share-finance": {
+      "type": "sse",
+      "url": "https://your-mcp-domain.example.com/sse"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "a-share-finance": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/fatpegion/financialagent.git#subdirectory=a-share-mcp-is-just-i-need",
+        "a-share-finance-mcp"
+      ],
+      "env": {
+        "A_SHARE_MCP_TRANSPORT": "stdio"
+      }
+    }
+  }
+}

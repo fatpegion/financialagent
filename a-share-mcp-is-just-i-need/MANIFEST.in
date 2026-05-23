@@ -1,0 +1,8 @@
+include README_CLOUD.md
+include mcp_server.py
+include aliyun_mcp_*.json
+recursive-include src *.py
+prune **/__pycache__
+exclude .DS_Store
+exclude uv.lock
+exclude test_baostock.py

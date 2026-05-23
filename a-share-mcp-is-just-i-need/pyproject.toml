@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "a-share-finance-mcp"
+version = "0.1.1"
+description = "A-share market, financial report, index, macro and news MCP tools backed by Baostock."
+readme = "README_CLOUD.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.2.0",
+    "baostock==0.8.9",
+    "pandas>=2.2.0",
+    "requests>=2.32.0,<3",
+    "beautifulsoup4>=4.12.0",
+    "tabulate>=0.9.0",
+]
+
+[project.scripts]
+a-share-finance-mcp = "mcp_server:main"
+
+[tool.setuptools]
+py-modules = ["mcp_server"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+exclude = ["*.tests", "*.tests.*", "tests.*", "tests"]

@@ -1,0 +1,11 @@
+include main.py
+recursive-include financialagent_cloud *.py
+recursive-include deploy_starter *.py
+exclude .env
+exclude .DS_Store
+prune .venv
+prune .idea
+prune models
+prune Financial-MCP-Agent/models
+prune Financial-MCP-Agent/logs
+prune Financial-MCP-Agent/reports

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "a-share-finance": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "a-share-finance-mcp"
+      ],
+      "env": {
+        "A_SHARE_MCP_TRANSPORT": "stdio"
+      }
+    }
+  }
+}

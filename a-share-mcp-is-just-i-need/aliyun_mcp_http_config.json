@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "a-share-finance": {
+      "type": "streamableHttp",
+      "url": "https://your-mcp-domain.example.com/mcp"
+    }
+  }
+}
