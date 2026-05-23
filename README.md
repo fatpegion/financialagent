@@ -18,7 +18,7 @@ python setup.py bdist_wheel
 Upload:
 
 ```text
-dist/financialagent_bailian-0.1.3-py3-none-any.whl
+dist/financialagent_bailian-0.1.5-py3-none-any.whl
 ```
 
 Runtime routes:
@@ -43,6 +43,19 @@ FINANCIAL_AGENT_DATA_ENDPOINT=https://your-real-data-endpoint.example.com/analyz
 FINANCIAL_AGENT_DATA_METHOD=POST
 FINANCIAL_AGENT_DATA_TIMEOUT=8
 ```
+
+Optional Bailian MCP tool endpoint:
+
+```text
+DASHSCOPE_API_KEY=<your-bailian-api-key>
+FINANCIAL_AGENT_USE_MCP=1
+FINANCIAL_AGENT_MCP_URL=https://dashscope.aliyuncs.com/api/v1/mcps/<mcpCode>/mcp
+FINANCIAL_AGENT_MCP_TIMEOUT=20
+```
+
+If `FINANCIAL_AGENT_MCP_URL` is not set, the adapter uses the current A-share
+MCP endpoint configured for this project. MCP failures are non-fatal, so
+`/process` still returns a normal answer if the tool is temporarily unavailable.
 
 ## Bailian MCP Service
 

@@ -11,9 +11,10 @@ from fastapi.responses import JSONResponse
 
 from .analysis import analyze_query, build_report, extract_text, maybe_generate_with_llm, session_id_from_payload
 from .endpoint_client import fetch_external_context
+from .mcp_client import fetch_mcp_context
 
 
-app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.3")
+app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.5")
 
 
 @app.exception_handler(Exception)
@@ -53,7 +54,11 @@ async def process(request: Request) -> JSONResponse:
             text = "请在 message、query、prompt、text 或 input 字段中提供要分析的金融问题。"
         else:
             result = analyze_query(user_text)
-            external_context = await fetch_external_context(result)
+            context_parts = [
+                await fetch_mcp_context(result),
+                await fetch_external_context(result),
+            ]
+            external_context = "\n\n".join(part for part in context_parts if part)
             fallback_report = build_report(result)
             if external_context:
                 fallback_report = f"{fallback_report}\n\n外部数据接口补充：\n{external_context}"

@@ -17,6 +17,17 @@ OPENAI_COMPATIBLE_MODEL=deepseek-v4-flash
 FINANCIAL_AGENT_USE_LLM=1
 ```
 
+MCP 工具接入（在高代码应用工具页添加 MCP 服务后，在代码中实际调用）：
+
+```text
+DASHSCOPE_API_KEY=<你的百炼 API Key>
+FINANCIAL_AGENT_USE_MCP=1
+FINANCIAL_AGENT_MCP_URL=https://dashscope.aliyuncs.com/api/v1/mcps/<mcpCode>/mcp
+FINANCIAL_AGENT_MCP_TIMEOUT=20
+```
+
+当前适配器会优先调用 A 股 MCP 工具补充行情、基础信息、K 线、财务和新闻数据，再把工具结果传给模型生成报告。MCP 调用失败不会中断 `/process`。
+
 濡傛灉涓嶉厤缃?API Key锛屾帴鍙ｄ粛鍙繑鍥炶鍒欏紩鎿庡垎鏋愮粨鏋滐紝鏂逛究鍏堥€氳繃 API 娴嬭瘯銆?
 ## 鏈湴鎵撳寘
 
