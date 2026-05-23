@@ -67,19 +67,25 @@ async def fetch_mcp_context(result: AnalysisResult) -> str | None:
         from fastmcp import Client
         from fastmcp.client.transports import StreamableHttpTransport
     except Exception:
-        return await asyncio.to_thread(
-            _fetch_with_raw_streamable_http,
-            mcp_url,
-            api_key,
-            tool_calls,
-            timeout,
-        )
+        try:
+            return await asyncio.to_thread(
+                _fetch_with_raw_streamable_http,
+                mcp_url,
+                api_key,
+                tool_calls,
+                timeout,
+            )
+        except Exception as exc:
+            return _maybe_error(f"MCP raw HTTP failed: {type(exc).__name__}: {exc}")
 
-    transport = _build_streamable_http_transport(
-        StreamableHttpTransport,
-        mcp_url=mcp_url,
-        headers={"Authorization": f"Bearer {api_key}"},
-    )
+    try:
+        transport = _build_streamable_http_transport(
+            StreamableHttpTransport,
+            mcp_url=mcp_url,
+            headers={"Authorization": f"Bearer {api_key}"},
+        )
+    except Exception as exc:
+        return _maybe_error(f"MCP transport failed: {type(exc).__name__}: {exc}")
 
     sections: list[str] = []
     try:
@@ -121,7 +127,7 @@ def _fetch_with_raw_streamable_http(
             "capabilities": {},
             "clientInfo": {
                 "name": "financialagent-bailian",
-                "version": "0.1.5",
+                "version": "0.1.6",
             },
         },
     }

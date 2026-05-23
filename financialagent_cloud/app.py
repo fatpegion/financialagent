@@ -14,7 +14,7 @@ from .endpoint_client import fetch_external_context
 from .mcp_client import fetch_mcp_context
 
 
-app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.5")
+app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.6")
 
 
 @app.exception_handler(Exception)
@@ -55,8 +55,8 @@ async def process(request: Request) -> JSONResponse:
         else:
             result = analyze_query(user_text)
             context_parts = [
-                await fetch_mcp_context(result),
-                await fetch_external_context(result),
+                await _safe_context(fetch_mcp_context, result),
+                await _safe_context(fetch_external_context, result),
             ]
             external_context = "\n\n".join(part for part in context_parts if part)
             fallback_report = build_report(result)
@@ -83,6 +83,13 @@ async def chat_get(q: str = "") -> dict[str, str]:
 @app.post("/chat")
 async def chat_post(request: Request) -> JSONResponse:
     return await process(request)
+
+
+async def _safe_context(func: Any, result: Any) -> str | None:
+    try:
+        return await func(result)
+    except Exception:
+        return None
 
 
 async def _read_payload(request: Request) -> Any:
