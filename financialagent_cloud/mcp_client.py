@@ -21,10 +21,10 @@ DEFAULT_A_SHARE_MCP_URL = (
 
 async def fetch_mcp_context(result: AnalysisResult) -> str | None:
     """Fetch A-share context through Bailian's MCP endpoint."""
-    if os.getenv("FINANCIAL_AGENT_USE_MCP", "1").lower() in {"0", "false", "no", "off"}:
+    if _env_flag("FINANCIAL_AGENT_USE_MCP", default=True) is False:
         return None
 
-    api_key = os.getenv("DASHSCOPE_API_KEY")
+    api_key = _env_value("DASHSCOPE_API_KEY")
     if not api_key or api_key.lower().startswith("your "):
         return _maybe_error("DASHSCOPE_API_KEY is not configured.")
 
@@ -38,7 +38,7 @@ async def fetch_mcp_context(result: AnalysisResult) -> str | None:
     if not code:
         return None
 
-    timeout = float(os.getenv("FINANCIAL_AGENT_MCP_TIMEOUT", "20"))
+    timeout = float(_env_value("FINANCIAL_AGENT_MCP_TIMEOUT") or "20")
     now = datetime.now()
     code_label = result.company_name or code
     end_date = now.strftime("%Y-%m-%d")
@@ -116,7 +116,7 @@ def _fetch_with_raw_streamable_http(
     """Minimal Streamable HTTP MCP client used when fastmcp is unavailable."""
     request_id = 1
     headers = {"Authorization": f"Bearer {api_key}"}
-    protocol_version = os.getenv("FINANCIAL_AGENT_MCP_PROTOCOL_VERSION", "2025-03-26")
+    protocol_version = _env_value("FINANCIAL_AGENT_MCP_PROTOCOL_VERSION") or "2025-03-26"
 
     initialize_payload = {
         "jsonrpc": "2.0",
@@ -302,20 +302,32 @@ def _truncate(text: str, limit: int = 3500) -> str:
 
 
 def _maybe_error(message: str, tool_name: str | None = None) -> str | None:
-    if os.getenv("FINANCIAL_AGENT_SHOW_MCP_ERRORS", "0").lower() not in {
-        "1",
-        "true",
-        "yes",
-        "on",
-    }:
+    if not _env_flag("FINANCIAL_AGENT_SHOW_MCP_ERRORS", default=False):
         return None
     prefix = f"MCP {tool_name} error" if tool_name else "MCP error"
     return f"{prefix}: {message}"
 
 
+def _env_flag(name: str, default: bool = False) -> bool:
+    value = _env_value(name)
+    if value is None:
+        return default
+    return value.lower() in {"1", "true", "yes", "on"}
+
+
 def _env_first(*names: str) -> str | None:
     for name in names:
-        value = os.getenv(name)
+        value = _env_value(name)
         if value:
             return value
     return None
+
+
+def _env_value(name: str) -> str | None:
+    value = os.getenv(name)
+    if value is None:
+        return None
+    value = value.strip()
+    if len(value) >= 2 and value.startswith("{") and value.endswith("}"):
+        value = value[1:-1].strip()
+    return value or None

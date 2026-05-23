@@ -18,7 +18,7 @@ python setup.py bdist_wheel
 Upload:
 
 ```text
-dist/financialagent_bailian-0.1.6-py3-none-any.whl
+dist/financialagent_bailian-0.1.7-py3-none-any.whl
 ```
 
 Runtime routes:

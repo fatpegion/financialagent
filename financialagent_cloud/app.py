@@ -14,7 +14,7 @@ from .endpoint_client import fetch_external_context
 from .mcp_client import fetch_mcp_context
 
 
-app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.6")
+app = FastAPI(title="FinancialAgent Bailian Adapter", version="0.1.7")
 
 
 @app.exception_handler(Exception)
